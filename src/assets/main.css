@@ -1,0 +1,86 @@
+body, html {
+    height: 100%;
+    width: 100%;
+}
+
+#app {
+    height: 100%;
+}
+
+.footer {
+    position: sticky;
+    top: 100%;
+    background: rgb(87, 78, 78);
+    text-align: center;
+    color: #fff;
+    padding: 1rem;
+    max-height: 50px;
+}
+
+.height-80 {
+    height: 80% !important;
+}
+
+.header-bg {
+    background-color: #2a303c;
+    height: 60px
+}
+
+.fs-01 {
+    font-size: 1rem!important;
+}
+.fs-24{
+    font-size: 24px;
+}
+
+.bg-menu {
+    background-color: #2a303c;
+}
+
+.fs-2rem {
+    font-size: 1.5rem;
+}
+
+.sidebar-menu-item:hover {
+    background-color: #323a49;
+}
+
+.sidebar {
+    /* height: 100%;
+    position: fixed; */
+    /*flex-basis: 200px; !* độ rộng của thanh sidebar *!*/
+    /*flex-grow: 1; */
+    position: sticky;
+    top: 0;
+    height: 100%;
+}
+
+.header-gray {
+    background-color: #d9d9d9;
+}
+
+.position-left-25 {
+    left: -25px !important;
+}
+
+.h-150 {
+    min-height: 150px;
+}
+
+.mw-100 {
+    min-width: 100px
+}
+
+.mw-65 {
+    min-width: 65px
+}
+.bg-main{
+    background-color: #2a303c;
+}
+.img-style{
+    width: 20%;
+    height: auto
+}
+.hover:hover{
+    background-color: #383e4b ;
+}
