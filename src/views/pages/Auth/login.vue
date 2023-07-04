@@ -42,8 +42,8 @@ export default {
     /**
      * Login
      */
-    handleLogin() {
-      axiosClient.post("/admin/login", {
+    async handleLogin() {
+      await axiosClient.post("/admin/login", {
         username: this.username,
         password: this.password,
       })
@@ -56,7 +56,7 @@ export default {
         .catch((error) => {
           this.$swal.fire({
             title: 'Lỗi!',
-            text: error.response.data.message,
+            text: error.response.data.error,
             icon: 'error',
             confirmButtonText: 'OK'
           })

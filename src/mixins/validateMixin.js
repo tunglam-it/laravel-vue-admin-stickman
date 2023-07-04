@@ -11,5 +11,14 @@ export default {
             }
             return true
         },
-    }
+    },
+    computed: {
+        /***
+         * check password confirm
+         * @return {boolean}
+         */
+        passwordMatchError() {
+            return this.info.password !== this.info.password_confirmation;
+        }
+    },
 }

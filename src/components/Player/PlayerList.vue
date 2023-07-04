@@ -13,10 +13,31 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <div class="col-md-4 mb-2">
-                  <input class="form-control me-2" placeholder="Nhập username để tìm kiếm" v-model="username"
-                         type="text" @change="searchUsername">
+                <div class="row">
+                  <div class="col-md-4 mb-2">
+                    <input class="form-control me-2" placeholder="Nhập username để tìm kiếm" v-model="username"
+                           type="text" @change="searchInfo">
+                  </div>
+                  <div class="col-md-2 mb-2">
+                    <input class="form-control me-2" placeholder="Nhập username để tìm kiếm" v-model="start_date"
+                           type="date" @change="searchInfo">
+                  </div>
+                  <div class="col-md-2 mb-2">
+                    <input class="form-control me-2" placeholder="Nhập username để tìm kiếm" v-model="end_date"
+                           type="date" @change="searchInfo">
+                  </div>
+                  <div class="col-md-3 mb-2">
+                    <select name="" class="form-select" v-model="status" @change="searchInfo">
+                      <option>-- Chọn trạng thái --</option>
+                      <option value="1"> Active </option>
+                      <option value="2"> Unactive </option>
+                    </select>
+                  </div>
+                  <div class="col-md-1 mb-2 justify-content-end">
+                    <router-link class="btn btn-success" to="/create-user">+</router-link>
+                  </div>
                 </div>
+
               </div>
               <div class="card-body">
                 <table class="table table-hover">
@@ -24,8 +45,12 @@
                   <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Username</th>
-                    <th scope="col">Ngày tạo</th>
                     <th scope="col">Level</th>
+                    <th scope="col">Gold</th>
+                    <th scope="col">Diamonds</th>
+                    <th scope="col">Energy</th>
+                    <th scope="col">Ngày tạo</th>
+                    <th scope="col">Trạng thái</th>
                     <th scope="col">Action</th>
                   </tr>
                   </thead>
@@ -36,8 +61,12 @@
                   <tr v-for="user in this.users">
                     <th scope="row">{{ user.id }}</th>
                     <td>{{ user.username }}</td>
-                    <td>{{ user.created_at }}</td>
                     <td>{{ user.level }}</td>
+                    <td>{{ user.gold }}</td>
+                    <td>{{ user.diamonds }}</td>
+                    <td>{{ user.energy }}</td>
+                    <td>{{ user.created_at }}</td>
+                    <td><button @click="changeStatus(user.id, user.status==1?2:1)" class="btn btn-sm" :class="{'btn-danger':user.status==2,'btn-success':user.status==1 }">{{ getStatusName(user.status) }}</button></td>
                     <td>
                       <button @click="editUser(user.id)" data-bs-toggle="modal" data-bs-target="#exampleModal"
                               type="button" class="btn btn-sm btn-primary me-4"><i
@@ -52,6 +81,7 @@
                 </table>
               </div>
             </div>
+
             <div class="d-inline-flex align-items-center">
               <span class="me-4 fw-bold text-white">Total: {{ this.users.length }} users</span>
               <nav class="mt-2">
@@ -65,8 +95,8 @@
                   <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-angles-right"></i></a></li>
                 </ul>
               </nav>
-
             </div>
+
           </div>
         </div>
       </main>
@@ -126,7 +156,7 @@ import AppSidebar from "../AppSidebar.vue";
 import axiosClient from "../../axiosClient";
 
 export default {
-  name: 'AdminList',
+  name: 'PlayerList',
   components: {AppSidebar, AppHeader, AppFooter},
   props: {
     users: {},
@@ -134,15 +164,18 @@ export default {
   data() {
     return {
       username: '',
+      start_date:'',
+      end_date:'',
+      status:'',
       user_selected: {},
     }
   },
   methods: {
     /***
-     * call emit searchUsername
+     * call emit searchInfo
      */
-    searchUsername() {
-      this.$emit('searchUsername', this.username)
+    searchInfo() {
+      this.$emit('searchInfo', this.username, this.start_date, this.end_date, this.status)
     },
 
     /***
@@ -150,8 +183,8 @@ export default {
      * @param user_id
      * @return mixed
      */
-    editUser(user_id) {
-      axiosClient.get(`/admin/get-user-info/${user_id}`)
+    async editUser(user_id) {
+      await axiosClient.get(`/admin/get-user-info/${user_id}`)
           .then(res => {
             this.user_selected = res.data
           })
@@ -168,12 +201,37 @@ export default {
     },
 
     /***
+     * get Name of status
+     * @param status
+     * @return {string}
+     */
+    getStatusName(status){
+      if(status==1){
+        return 'Active'
+      }
+      return "Unactive"
+    },
+
+    /***
      * confirm to delete user
      * @param id
      * @return mixed
      */
     confirmDelete(id){
       this.$emit('confirmDelete', id)
+    },
+
+    /***
+     * Change status user by userId
+     * @param id
+     * @param status
+     * @return {Promise<void>}
+     */
+    async changeStatus(id,status){
+      await axiosClient.put(`/player/change-status-user/${id}`, {status:status})
+      .then(()=>{
+        this.searchInfo()
+      })
     }
   }
 }
