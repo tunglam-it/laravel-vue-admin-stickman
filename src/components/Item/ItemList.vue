@@ -9,23 +9,43 @@
             class=" d-flex justify-content-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h4 class="fw-bold">Thông tin Items Game</h4>
         </div>
+
+        <div class="row g-3 align-items-center">
+          <div class="col-auto">
+            <label for="name" class="col-form-label">Name:</label>
+          </div>
+          <div class="col-auto">
+            <input class="form-control me-2" id="name" placeholder="Nhập tên item" v-model="name"
+                   type="text" @change="searchItem">
+          </div>
+          <div class="col-auto">
+            <label class="col-form-label">Type:</label>
+          </div>
+          <div class="col-auto">
+            <select class="form-select" v-model="typeItem" @change="searchItem">
+              <option v-for="type in types" :value="type.id">{{ type.name }}</option>
+            </select>
+          </div>
+          <div class="col-auto">
+            <label class="col-form-label">Rarity:</label>
+          </div>
+          <div class="col-auto">
+            <select class="form-select" v-model="rarityItem" @change="searchItem">
+              <option v-for="rare in rarity" :value="rare.id">{{ rare.name }}</option>
+            </select>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-outline-primary" @click="resetSearch"><i class="fa-solid fa-eraser"></i></button>
+          </div>
+          <div class="col-auto">
+            <router-link class="btn btn-success" to="/create-item">+</router-link>
+          </div>
+        </div>
         <div class="row">
           <div class="col-md-12">
-            <div class="card">
-              <div class="card-header">
-                <div class="row">
-                  <div class="col-md-4 mb-2">
-                    <input class="form-control me-2" placeholder="Nhập tên item để tìm kiếm" v-model="name"
-                           type="text" @change="searchItem">
-                  </div>
-                  <div class="col-md-1 mb-2 justify-content-end">
-                    <router-link class="btn btn-success" to="/create-item">+</router-link>
-                  </div>
-                </div>
-
-              </div>
+            <div class="card mt-2">
               <div class="card-body">
-                <table class="table table-hover">
+                <table class="table table-hover table-responsive">
                   <thead>
                   <tr>
                     <th scope="col">ID</th>
@@ -44,9 +64,9 @@
                   </thead>
                   <tbody>
                   <tr>
-                    <td colspan="5" v-if="this.items.length<1">Items Not Found</td>
+                    <td colspan="12" v-if="this.items.length<1">Items Not Found</td>
                   </tr>
-                  <tr v-for="item in this.items">
+                  <tr v-for="item in this.items.data">
                     <th scope="row">{{ item.id }}</th>
                     <td>{{ item.name }}</td>
                     <td>{{ getTypeName(item.type) }}</td>
@@ -60,11 +80,11 @@
                     <td>{{ item.max_level }}</td>
                     <td>
                       <button @click="editItem(item.id)" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                              type="button" class="btn btn-sm btn-primary me-4"><i
-                          class="fa-regular fa-pen-to-square me-3"></i>Edit
+                              type="button" class="btn btn-sm btn-primary me-2"><i
+                          class="fa-regular fa-pen-to-square"></i>
                       </button>
-                      <button class="btn btn-sm btn-danger" @click="confirmDelete(item.id)"><i
-                          class="fa-regular fa-trash-can me-3"></i>Delete
+                      <button class="btn btn-sm btn-danger" @click="deleteItem(item.id)"><i
+                          class="fa-regular fa-trash-can"></i>
                       </button>
                     </td>
                   </tr>
@@ -73,19 +93,9 @@
               </div>
             </div>
 
-            <div class="d-inline-flex align-items-center">
-              <span class="me-4 fw-bold text-white">Total: {{ this.items.length }} items</span>
-              <nav class="mt-2">
-                <ul class="pagination">
-                  <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-angles-left"></i></a></li>
-                  <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-chevron-left"></i></a></li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-chevron-right"></i></a></li>
-                  <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-angles-right"></i></a></li>
-                </ul>
-              </nav>
+            <div class="d-inline-flex align-items-center mt-2">
+              <span class="me-4 fw-bold text-black">Display: {{this.items.to}} users of Total: {{ this.items.total }} users</span>
+              <Pagination :pagination="items" @paginate="searchItem()" :offset="4" />
             </div>
 
           </div>
@@ -105,19 +115,19 @@
           <form>
             <div class="mb-3">
               <label class="col-form-label">Name:</label>
-              <input v-model="this.item_selected.name" type="text" class="form-control" disabled>
+              <input v-model="this.item_selected.name" type="text" class="form-control">
             </div>
             <div class="row">
               <div class="mb-3 col-md-6">
                 <label class="col-form-label">Type:</label>
                 <select class="form-select" v-model="this.item_selected.type">
-                  <option v-for="type in getTypes()" :value="type.id">{{type.name}}</option>
+                  <option v-for="type in getTypes()" :value="type.id">{{ type.name }}</option>
                 </select>
               </div>
               <div class="mb-3 col-md-6">
-                <label  class="col-form-label">Rarity:</label>
+                <label class="col-form-label">Rarity:</label>
                 <select class="form-select" v-model="this.item_selected.rarity">
-                  <option v-for="rare in getRarity()" :value="rare.id">{{rare.name}}</option>
+                  <option v-for="rare in getRarity()" :value="rare.id">{{ rare.name }}</option>
                 </select>
               </div>
             </div>
@@ -144,11 +154,13 @@
             <div class="row">
               <div class="mb-3 col-md-4">
                 <label for="stat_increment" class="col-form-label">Stat Increment:</label>
-                <input v-model="this.item_selected.stat_increment" type="number" class="form-control" id="stat_increment">
+                <input v-model="this.item_selected.stat_increment" type="number" class="form-control"
+                       id="stat_increment">
               </div>
               <div class="mb-3 col-md-4">
                 <label for="price_increment" class="col-form-label">Price Increment:</label>
-                <input v-model="this.item_selected.price_increment" type="number" class="form-control" id="price_increment">
+                <input v-model="this.item_selected.price_increment" type="number" class="form-control"
+                       id="price_increment">
               </div>
               <div class="mb-3 col-md-4">
                 <label for="max_level" class="col-form-label">Max Level:</label>
@@ -159,12 +171,13 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" @click="approveEditItem(this.item_selected)" data-bs-dismiss="modal">Submit</button>
+          <button type="button" class="btn btn-primary" @click="approveEditItem(this.item_selected)"
+                  data-bs-dismiss="modal">Submit
+          </button>
         </div>
       </div>
     </div>
   </div>
-
   <AppFooter/>
 </template>
 
@@ -176,11 +189,12 @@ import axiosClient from "../../axiosClient.js";
 import getAttributeName from "../../mixins/getAttributeName.js";
 import types from "../../attributes/TypeItem.js";
 import rarity from "../../attributes/RarityItem.js";
+import Pagination from "../Pagination.vue";
 
 export default {
   name: "ItemList",
-  components: {AppSidebar, AppHeader, AppFooter},
-  mixins:[getAttributeName],
+  components: {Pagination, AppSidebar, AppHeader, AppFooter},
+  mixins: [getAttributeName],
   props: {
     items: {},
   },
@@ -188,17 +202,19 @@ export default {
     return {
       name: '',
       item_selected: {},
-      types:types,
-      rarity:rarity
+      types: types,
+      rarity: rarity,
+      typeItem: '',
+      rarityItem: ''
     }
   },
-  methods:{
+  methods: {
 
     /***
      * call emit searchItem
      */
-    searchItem(){
-      this.$emit('searchItem',this.name)
+    searchItem() {
+      this.$emit('searchItem', this.name, this.typeItem, this.rarityItem)
     },
 
     /***
@@ -206,7 +222,7 @@ export default {
      * @param item_id
      * @return mixed
      */
-    editItem(item_id){
+    editItem(item_id) {
       axiosClient.get(`/player/get-item-info/${item_id}`)
           .then(res => {
             this.item_selected = res.data
@@ -221,17 +237,27 @@ export default {
      * @param id
      * @return mixed
      */
-    confirmDelete(id){
-      this.$emit('confirmDelete', id)
+    deleteItem(id) {
+      this.$emit('deleteItem', id)
     },
 
     /***
      * call emit approveEditItem
      * @param item_selected
      */
-    approveEditItem(item_selected){
+    approveEditItem(item_selected) {
       this.$emit('approveEditItem', item_selected)
     },
+
+    /***
+     * reset value in input search
+     */
+    resetSearch() {
+      this.name = ''
+      this.rarityItem = ''
+      this.typeItem = ''
+      this.searchItem()
+    }
   }
 }
 </script>

@@ -1,18 +1,18 @@
 const types = [
     {
-        id:0,
+        id:1,
         name: 'Weapon'
     },
     {
-        id:1,
+        id:2,
         name: 'Shield'
     },
     {
-        id:2,
+        id:3,
         name: 'Helmet'
     },
     {
-        id:3,
+        id:4,
         name: 'Accessories'
     },
 ];

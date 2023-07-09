@@ -1,15 +1,17 @@
 <template>
   <PlayerList :users="users" @searchInfo="getAllUser" @approveEditUser="approveEditUser"
-              @confirmDelete="confirmDelete"/>
+              @deleteUser="deleteUser"/>
 </template>
 
 <script>
 import PlayerList from '../../../components/Player/PlayerList.vue'
 import axiosClient from "../../../axiosClient.js";
+import notifyPopup from "../../../mixins/notifyPopup.js";
 
 export default {
-  name: 'List',
+  name: 'ListPlayer',
   components: {PlayerList},
+  mixins:[notifyPopup],
   data() {
     return {
       users: {},
@@ -24,12 +26,15 @@ export default {
      * get all users info and search
      * @return mixed
      */
-    async getAllUser(username = '', start_date = '', end_date = '', status = '') {
-      await axiosClient.get(`/admin/get-all-users?username=${username}&start_date=${start_date}&end_date=${end_date}&status=${status}`)
-          .then(res => {
-            this.users = res.data.data
-          }).catch(err => {
-            console.log(err)
+    async getAllUser(username= '', start_date='', end_date='', start_level='', end_level='', start_gold='', end_gold='', start_diamonds='', end_diamonds='', status='',) {
+      await axiosClient.get(`/admin/get-all-users?page=${this.users.current_page}&username=${username}&start_date=${start_date}&end_date=${end_date}&status=${status}
+      &start_gold=${start_gold}&end_gold=${end_gold}&start_level=${start_level}&end_level=${end_level}&start_diamonds=${start_diamonds}&end_diamonds=${end_diamonds}`)
+          .then(({data}) => {
+            this.users = data.data
+          }).catch(() => {
+            localStorage.removeItem('token')
+            this.$router.push('/login')
+            window.location.reload()
           })
     },
 
@@ -40,23 +45,13 @@ export default {
      */
     async approveEditUser(user_selected) {
       await axiosClient.put(`/admin/update-user/${user_selected.id}`, user_selected)
-          .then(res => {
+          .then(() => {
             this.getAllUser()
+            this.notifyAPI('success', 'Success !!!')
           })
-          .catch(err => {
-            console.log(err)
+          .catch(() => {
+            this.notifyAPI('error', 'Failed !!!')
           })
-    },
-
-    /***
-     * confirm to delete user
-     * @param id
-     * @return mixed
-     */
-    confirmDelete(id) {
-      if (confirm('Are you sure delete this user?')) {
-        this.deleteUser(id)
-      }
     },
 
     /***
@@ -65,13 +60,34 @@ export default {
      * @return mixed
      */
     async deleteUser(id) {
-      await axiosClient.delete(`/admin/delete-user/${id}`)
-          .then(res => {
-            this.getAllUser()
-          })
-          .catch(err => {
-            console.log(err)
-          })
+      this.$swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axiosClient.delete(`/admin/delete-user/${id}`)
+            .then(() => {
+              this.getAllUser()
+              this.$swal.fire(
+                  'Deleted Success !!!',
+                  'Item removed',
+                  'success'
+              )
+            })
+            .catch(() => {
+              this.$swal.fire(
+                  'Deleted Failed !!!',
+                  'Item not removed',
+                  'error'
+              )
+            })
+        }
+      })
     }
   }
 }

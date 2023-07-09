@@ -17,6 +17,8 @@ import { dom } from "@fortawesome/fontawesome-svg-core";
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+
+
 dom.watch();
 
 const app = createApp(App)
@@ -24,5 +26,6 @@ const app = createApp(App)
 app.use(router)
 app.component("font-awesome-icon", FontAwesomeIcon)
 app.use(VueSweetalert2);
+
 
 app.mount('#app')

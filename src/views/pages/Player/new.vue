@@ -5,10 +5,12 @@
 <script>
 import PlayerCreate from "../../../components/Player/PlayerCreate.vue";
 import axiosClient from "../../../axiosClient.js";
+import notifyPopup from "../../../mixins/notifyPopup.js";
 
 export default {
-  name: "CreateUser",
+  name: "CreatePlayer",
   components: {PlayerCreate},
+  mixins:[notifyPopup],
   methods: {
     /***
      * register a new player
@@ -17,11 +19,12 @@ export default {
      */
     registerNewPlayer(info) {
       axiosClient.post('/player/register', info)
-          .then(res => {
+          .then(() => {
             this.$router.push('/')
+            this.notifyAPI('success', "Success !!!")
           })
-          .catch(err => {
-            console.log(err)
+          .catch(() => {
+            this.notifyAPI('error', "Failed !!!")
           })
     }
   }

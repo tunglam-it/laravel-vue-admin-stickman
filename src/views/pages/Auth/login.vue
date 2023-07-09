@@ -18,6 +18,7 @@
       </div>
     </div>
   </main>
+
   <AppFooter />
 </template>
 
@@ -34,8 +35,8 @@ export default {
   components: { Field, Form, ErrorMessage, AuthHeader, AppFooter },
   data() {
     return {
-      username: '',
-      password: '',
+      username: null,
+      password: null,
     }
   },
   methods: {
@@ -48,7 +49,6 @@ export default {
         password: this.password,
       })
         .then((response) => {
-          console.log(response.data);
           localStorage.setItem("token", response.data.token);
           this.$router.push("/");
           window.location.reload()

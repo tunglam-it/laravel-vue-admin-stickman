@@ -1,7 +1,7 @@
 <template>
-  <header class="bg-dark text-light py-3">
-    <div class="container">
-      <h5>Stickman Manager</h5>
+  <header class="bg-light text-light py-3">
+    <div class="container text-center">
+      <h5 class="text-black">Stickman Manager</h5>
     </div>
   </header>
 </template>

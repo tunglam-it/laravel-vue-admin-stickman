@@ -1,18 +1,18 @@
 <template>
-  <header class="text-light py-3 bg-main">
+  <header class="text-light py-3 bg-light">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-2 text-center">
           <img src="../assets/img.png" alt="Logo" class="img-style">
-          <span class="text-white ms-3 fs-01">Stickman Manager</span>
+          <span class="text-black ms-3 fs-01">Stickman Manager</span>
         </div>
         <div class="col-md-10 d-flex justify-content-end align-items-center">
           <div class="dropdown">
-            <div class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="dropdown-toggle text-black" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               Xin chào, Admin
             </div>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <li><router-link class="dropdown-item" @click="logout" to="#">Đăng xuất</router-link></li>
+              <li><router-link class="dropdown-item text-black" @click="logout" to="#">Đăng xuất</router-link></li>
             </ul>
           </div>
         </div>

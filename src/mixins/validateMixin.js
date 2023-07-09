@@ -10,7 +10,7 @@ export default {
                 return 'This field is required';
             }
             return true
-        },
+        }
     },
     computed: {
         /***

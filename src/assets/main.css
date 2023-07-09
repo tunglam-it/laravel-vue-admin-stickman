@@ -10,9 +10,9 @@ body, html {
 .footer {
     position: sticky;
     top: 100%;
-    background: rgb(87, 78, 78);
+    background: rgb(240,240,240);
     text-align: center;
-    color: #fff;
+    color: #000000;
     padding: 1rem;
     max-height: 50px;
 }
@@ -82,5 +82,12 @@ body, html {
     height: auto
 }
 .hover:hover{
-    background-color: #383e4b ;
+    background-color: #00bbff;
+}
+
+.text-hover:hover{
+    color: white;
+}
+.bg-img{
+    /*background-image: url('./src/assets/sea.jpg');background-size: contain*/
 }

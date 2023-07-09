@@ -6,10 +6,10 @@ export default {
          * @return {string}
          */
         getTypeName(type){
-            if(type==0) return 'Weapon'
-            if(type==1) return 'Shield'
-            if(type==2) return 'Helmet'
-            if(type==3) return 'Accessories'
+            if(type==1) return 'Weapon'
+            if(type==2) return 'Shield'
+            if(type==3) return 'Helmet'
+            if(type==4) return 'Accessories'
         },
 
         /***
@@ -18,10 +18,10 @@ export default {
          * @return {string}
          */
         getRarityName(rarity){
-            if(rarity==0) return 'Common'
-            if(rarity==1) return 'Fine'
-            if(rarity==2) return 'Rare'
-            if(rarity==3) return 'Epic'
+            if(rarity==1) return 'Common'
+            if(rarity==2) return 'Fine'
+            if(rarity==3) return 'Rare'
+            if(rarity==4) return 'Epic'
         },
 
         /***

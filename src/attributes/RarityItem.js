@@ -1,18 +1,18 @@
 const rarity = [
     {
-        id:0,
+        id:1,
         name: 'Common'
     },
     {
-        id:1,
+        id:2,
         name: 'Fine'
     },
     {
-        id:2,
+        id:3,
         name: 'Rare'
     },
     {
-        id:3,
+        id:4,
         name: 'Epic'
     },
 ];
