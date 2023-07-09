@@ -64,7 +64,7 @@
                   </thead>
                   <tbody>
                   <tr>
-                    <td colspan="12" v-if="this.items.length<1">Items Not Found</td>
+                    <td colspan="12" class="text-center fw-bold" v-if="this.items.data.length<1">Items Not Found</td>
                   </tr>
                   <tr v-for="item in this.items.data">
                     <th scope="row">{{ item.id }}</th>

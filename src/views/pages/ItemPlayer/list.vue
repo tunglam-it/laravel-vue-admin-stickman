@@ -22,8 +22,8 @@ export default {
     /***
      * get all item of user
      */
-    searchItemPlayer(playerName = '', itemName = '') {
-      axiosClient.get(`/player/get-all-item-users?page=${this.items.current_page}&playerName=${playerName}&itemName=${itemName}`)
+    searchItemPlayer(playerName = '', itemName = '',status='',rarityItem='', typeItem='', start_level='', end_level='',) {
+      axiosClient.get(`/player/get-all-item-users?page=${this.items.current_page}&playerName=${playerName}&status=${status}&itemName=${itemName}&rarityItem=${rarityItem}&typeItem=${typeItem}&start_level=${start_level}&end_level=${end_level}`)
           .then(({data}) => {
             this.items = data.data
           })

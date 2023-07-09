@@ -76,6 +76,10 @@ export default {
     }
   },
   computed: {
+    /***
+     * check validate of multiselect plugin
+     * @return {boolean}
+     */
     isInvalid () {
       return !this.info.itemRawId || !this.info.userId ;
     }

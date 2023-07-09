@@ -40,11 +40,11 @@ export default {
     }
   },
   methods: {
-    /**
-     * Login
+    /***
+     * login
      */
-    async handleLogin() {
-      await axiosClient.post("/admin/login", {
+    handleLogin() {
+      axiosClient.post("/admin/login", {
         username: this.username,
         password: this.password,
       })

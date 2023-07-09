@@ -99,7 +99,7 @@
                   </thead>
                   <tbody>
                   <tr>
-                    <td colspan="9" v-if="this.users.length<1">Users Not Found</td>
+                    <td colspan="9" class="text-center fw-bold" v-if="this.users.data.length<1">Users Not Found</td>
                   </tr>
                   <tr v-for="user in this.users.data">
                     <th scope="row">{{ user.id }}</th>

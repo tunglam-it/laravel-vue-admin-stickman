@@ -11,6 +11,10 @@ export default {
   components: {ItemCreate},
   mixins:[notifyPopup],
   methods:{
+    /***
+     * create new item
+     * @param info
+     */
     createItem(info){
       axiosClient.post('/admin/create-item',info)
         .then(()=>{

@@ -9,21 +9,66 @@
             class=" d-flex justify-content-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h4 class="fw-bold">Thông tin Items của Player</h4>
         </div>
-
-        <div class="row">
-          <div class="col-md-4 mb-2">
+        <div class="row g-3 align-items-center mb-2">
+          <div class="col-auto">Status:</div>
+          <div class="col-auto">
+            <input name="status" type="radio" v-model="status" id="all" class="form-check-input" value=""
+                   @change="searchItemPlayer">
+            <label for="all" class="form-check-label"> All</label>
+          </div>
+          <div class="col-auto">
+            <input name="status" type="radio" v-model="status" id="status1" class="form-check-input" value="1"
+                   @change="searchItemPlayer">
+            <label for="status1" class="form-check-label"> Equipped</label>
+          </div>
+          <div class="col-auto">
+            <input name="status" type="radio" v-model="status" id="status2" class="form-check-input" value="2"
+                   @change="searchItemPlayer">
+            <label for="status2" class="form-check-label"> UnEquipped</label>
+          </div>
+        </div>
+        <div class="row g-3 align-items-center mb-2">
+          <div class="col-auto">Username:</div>
+          <div class="col-auto">
             <input class="form-control me-2" placeholder="Nhập username" v-model="playerName"
                    type="text" @change="searchItemPlayer">
           </div>
-          <div class="col-md-4 mb-2">
+          <div class="col-auto">Item Name:</div>
+          <div class="col-auto">
             <input class="form-control me-2" placeholder="Nhập tên item " v-model="itemName"
                    type="text" @change="searchItemPlayer">
           </div>
-          <div class="col-md-1 mb-2 justify-content-end">
+        </div>
+        <div class="row g-3 align-items-center mb-2">
+          <div class="col-auto">Rarity:</div>
+          <div class="col-auto col-md-2">
+            <select class="form-select" v-model="rarityItem" @change="searchItemPlayer">
+              <option v-for="rare in rarity" :value="rare.id">{{ rare.name }}</option>
+            </select>
+          </div>
+          <div class="col-auto">Type:</div>
+          <div class="col-auto col-md-2">
+            <select class="form-select" v-model="typeItem" @change="searchItemPlayer">
+              <option v-for="type in types" :value="type.id">{{ type.name }}</option>
+            </select>
+          </div>
+          <div class="col-auto">Level:</div>
+          <div class="col-auto col-md-2">
+            <input class="form-control me-2" placeholder="Nhập level start " v-model="start_level"
+                   type="text" @change="searchItemPlayer">
+          </div>
+          ~
+          <div class="col-auto col-md-2">
+            <input class="form-control me-2" placeholder="Nhập level end " v-model="end_level"
+                   type="text" @change="searchItemPlayer">
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-outline-primary" @click="resetSearch"><i class="fa-solid fa-eraser"></i></button>
+          </div>
+          <div class="col-md-1 justify-content-end">
             <router-link class="btn btn-success" to="/create-item-user">+</router-link>
           </div>
         </div>
-
         <div class="row">
           <div class="col-md-12">
             <div class="card mt-2">
@@ -47,7 +92,7 @@
                   </thead>
                   <tbody>
                   <tr>
-                    <td colspan="12" v-if="this.items.length<1">Items Not Found</td>
+                    <td colspan="12" class="text-center fw-bold" v-if="this.items.data.length<1">Items Not Found</td>
                   </tr>
                   <tr v-for="item in this.items.data">
                     <th scope="row">{{ item.id }}</th>
@@ -73,9 +118,8 @@
             </div>
 
             <div class="d-inline-flex align-items-center mt-2">
-              <span class="me-4 fw-bold text-black">Display: {{this.items.to}} users of Total: {{ this.items.total }} users</span>
-              <Pagination :pagination="items" @paginate="searchItemPlayer()" :offset="4" />
-
+              <span class="me-4 fw-bold text-black">Display: {{ this.items.to }} users of Total: {{ this.items.total }} users</span>
+              <Pagination :pagination="items" @paginate="searchItemPlayer()" :offset="4"/>
             </div>
 
           </div>
@@ -97,32 +141,38 @@ import Pagination from "../Pagination.vue";
 
 export default {
   components: {AppSidebar, AppHeader, AppFooter, Pagination},
-  mixins:[getAttributeName],
+  mixins: [getAttributeName],
   name: "ItemPlayerList",
-  props:{
-    items:{}
+  props: {
+    items: {}
   },
-  data(){
-    return{
-      types:types,
+  data() {
+    return {
+      types: types,
       rarity: rarity,
-      itemName:'',
-      playerName:'',
+      itemName: '',
+      playerName: '',
+      status: '',
+      rarityItem: '',
+      typeItem: '',
+      start_level: '',
+      end_level: '',
+
     }
   },
-  methods:{
+  methods: {
     /***
      * call emit to searchItemPlayer
      */
-    searchItemPlayer(){
-      this.$emit('searchItemPlayer', this.playerName, this.itemName)
+    searchItemPlayer() {
+      this.$emit('searchItemPlayer', this.playerName, this.itemName, this.status, this.rarityItem, this.typeItem, this.start_level, this.end_level)
     },
 
     /***
      * call emit to confirmDelete
      * @param id
      */
-    deleteItemUser(id){
+    deleteItemUser(id) {
       this.$emit('deleteItemUser', id)
     },
 
@@ -131,9 +181,19 @@ export default {
      * @param status
      * @return {string}
      */
-    getStatusName(status){
-      if(status==2)return 'UnEquipped'
-      if(status==1)return 'Equipped'
+    getStatusName(status) {
+      if (status == 2) return 'UnEquipped'
+      if (status == 1) return 'Equipped'
+    },
+    resetSearch() {
+      this.itemName = ''
+      this.playerName = ''
+      this.status = ''
+      this.rarityItem = ''
+      this.typeItem = ''
+      this.start_level = ''
+      this.end_level = ''
+      this.searchItemPlayer()
     }
   }
 

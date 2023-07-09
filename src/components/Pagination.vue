@@ -26,6 +26,10 @@ export default {
     offset:''
   },
   computed: {
+    /***
+     * calculate pagenumber
+     * @return {*[]}
+     */
     pagesNumber() {
       if (!this.pagination.to) {
         return [];
@@ -46,6 +50,10 @@ export default {
     }
   },
   methods:{
+    /***
+     * display & change page when click pagenumber
+     * @param page
+     */
     changePage(page) {
       this.pagination.current_page = page;
       this.$emit('paginate');
