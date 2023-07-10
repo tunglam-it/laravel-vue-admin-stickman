@@ -30,7 +30,6 @@ export default {
       axiosClient.get(`/player/get-all-item-info?page=${this.items.current_page}&name=${name}&rarity=${rarity}&type=${type}`)
       .then(({data})=>{
         this.items = data.data
-        console.log(this.items)
       }).catch(err=>{
         console.log(err)
       })

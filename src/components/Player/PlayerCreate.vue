@@ -4,16 +4,16 @@
     <div class="row">
       <AppSidebar/>
       <!-- Phần content -->
-      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-        <div
-            class=" d-flex justify-content-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h4 class="fw-bold">Thêm mới tài khoản người chơi</h4>
-        </div>
+      <main role="main" class="col-md-10 ml-sm-auto col-lg-10 bg-main px-3 py-3">
         <div class="row">
           <div class="col-md-12">
             <div class="card">
+              <Form @submit="registerNewPlayer">
+              <div class="card-header text-primary">
+                <i class="fa-solid fa-pencil me-1"></i>
+                <span class="fw-bold">Add user</span>
+              </div>
               <div class="card-body">
-                <Form @submit="registerNewPlayer">
                   <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
                     <Field name="username" type="text" v-model="info.username" class="form-control" id="username" placeholder="Username" :rules="validateInput" />
@@ -50,9 +50,12 @@
                       <input type="number" v-model="info.exp" class="form-control" id="exp" placeholder="EXP">
                     </div>
                   </div>
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </Form>
               </div>
+              <div class="card-footer text-center">
+                <button type="submit" class="btn btn-primary me-2"><i class="fa-solid fa-floppy-disk me-2"></i>Save</button>
+                <button class="btn btn-outline-primary me-2"><i class="fa-solid fa-arrow-left me-2"></i>Cancel</button>
+              </div>
+              </Form>
             </div>
           </div>
         </div>

@@ -10,7 +10,6 @@ body, html {
 .footer {
     position: sticky;
     top: 100%;
-    background: rgb(240,240,240);
     text-align: center;
     color: #000000;
     padding: 1rem;
@@ -75,19 +74,26 @@ body, html {
     min-width: 65px
 }
 .bg-main{
-    background-color: #2a303c;
+    background-color: rgb(240,240,240)
 }
 .img-style{
     width: 20%;
     height: auto
 }
 .hover:hover{
-    background-color: #00bbff;
+    background-color: rgb(13,110,253);
 }
-
-.text-hover:hover{
-    color: white;
+.hover:hover .text-white-hover{
+    color: white!important;
 }
-.bg-img{
-    /*background-image: url('./src/assets/sea.jpg');background-size: contain*/
+.border-radius-none{
+    border-radius: unset!important;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.11);
+}
+.border-right{
+    border-right: 1px solid rgba(0, 0, 0, 0.14)
+}
+.page-link-radius{
+    border-radius: 50%!important;
 }
