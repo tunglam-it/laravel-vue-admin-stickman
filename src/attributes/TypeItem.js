@@ -17,4 +17,4 @@ const types = [
     },
 ];
 
-export default types;
+export default types

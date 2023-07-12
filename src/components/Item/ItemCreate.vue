@@ -104,7 +104,7 @@
   <AppFooter/>
 </template>
 
-<script>
+<script setup>
 import AppFooter from "../AppFooter.vue";
 import AppHeader from "../AppHeader.vue";
 import AppSidebar from "../AppSidebar.vue";
@@ -113,37 +113,32 @@ import getAttributeName from "../../mixins/getAttributeName.js";
 import {Field, Form, ErrorMessage} from 'vee-validate';
 import types from "../../attributes/TypeItem.js";
 import rarity from "../../attributes/RarityItem.js";
+import {reactive} from "vue";
 
+const emit = defineEmits(['createItem'])
+const {validateInput} = validateMixin()
+const {getTypes, getTypeName, getRarity, getRarityName} = getAttributeName()
+const info = reactive({
+  name: '',
+  type: '',
+  atk: '',
+  head_def: '',
+  body_def: '',
+  hp: '',
+  rarity: '',
+  stat_increment: '',
+  price_increment: '',
+  max_level: '',
+})
+const state = reactive({
+  types: types,
+  rarity: rarity,
+})
 
-export default {
-  components: {AppSidebar, AppHeader, AppFooter, Field, Form, ErrorMessage},
-  mixins: [validateMixin, getAttributeName],
-  name: "ItemCreate",
-  data() {
-    return {
-      info: {
-        name: '',
-        type: '',
-        atk: '',
-        head_def: '',
-        body_def: '',
-        hp: '',
-        rarity: '',
-        stat_increment: '',
-        price_increment: '',
-        max_level: '',
-      },
-      types: types,
-      rarity: rarity,
-    }
-  },
-  methods: {
-    /***
-     * call emit to register player
-     */
-    createItem() {
-      this.$emit('createItem', this.info)
-    },
-  }
+/***
+ * call emit to register player
+ */
+const createItem=()=> {
+  emit('createItem', info)
 }
 </script>

@@ -13,7 +13,9 @@
               <img src="https://picsum.photos/30" style="border-radius: 50%">
             </div>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <li><router-link class="dropdown-item text-black" @click="logout" to="#">Đăng xuất</router-link></li>
+              <li>
+                <router-link class="dropdown-item text-black" @click="logout" to="#">Đăng xuất</router-link>
+              </li>
             </ul>
           </div>
         </div>
@@ -21,20 +23,20 @@
     </div>
   </header>
 </template>
- 
-<script>
-export default {
-  name: 'AppHeader',
-  methods: {
-    /**
-     * logout
-     */
-    logout() {
-      localStorage.removeItem('token')
-      this.$router.push('/login')
-      window.location.reload()
-    },
 
-  }
+<script setup>
+import {useRouter} from 'vue-router'
+
+const router = useRouter()
+
+/**
+ * logout
+ */
+const logout = () => {
+  localStorage.removeItem('token')
+  router.push('/login')
+  window.location.reload()
 }
+
+
 </script>

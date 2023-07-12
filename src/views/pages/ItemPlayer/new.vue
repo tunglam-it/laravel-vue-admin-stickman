@@ -1,32 +1,27 @@
 <template>
-  <ItemPlayerCreate @giveItemForUser="giveItemForUser"/>
+  <ItemPlayerCreate @giveItemForUser="giveItemForUser" />
 </template>
 
-<script>
+<script setup>
 import ItemPlayerCreate from "../../../components/ItemPlayer/ItemPlayerCreate.vue";
 import axiosClient from "../../../axiosClient";
 import notifyPopup from "../../../mixins/notifyPopup.js";
+import {useRouter} from "vue-router";
 
-export default {
-  name: "CreateItemPlayer",
-  components: {ItemPlayerCreate},
-  mixins:[notifyPopup],
-  methods: {
-    /**-
-     * call api give item for user
-     * @param info
-     */
-    giveItemForUser(info) {
-      axiosClient.post('/admin/give-item-for-user', {userId:info.userId.id, itemRawId:info.itemRawId.id})
-        .then(() => {
-          this.$router.push('/list-item-user')
-          this.notifyAPI('success', 'Success !!!')
-        })
-        .catch(() => {
-          this.notifyAPI('error', 'Failed !!!')
-        })
-    }
-
-  }
+const {notifyAPI} = notifyPopup()
+const router = useRouter()
+/**
+ * call api give item for user
+ * @param info
+ */
+const giveItemForUser = (info) => {
+  axiosClient.post('/admin/give-item-for-user', {userId: info.userId.id, itemRawId: info.itemRawId.id})
+    .then(() => {
+      router.push('/list-item-user')
+      notifyAPI('success', 'Success !!!')
+    })
+    .catch(() => {
+      notifyAPI('error', 'Failed !!!')
+    })
 }
 </script>

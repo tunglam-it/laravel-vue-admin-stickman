@@ -1,24 +1,28 @@
-export default {
-    methods: {
-        /**
-         * check validate required
-         * @param value
-         * @returns
-         */
-        validateInput(value) {
-            if (!value) {
-                return 'This field is required';
-            }
-            return true
+import {computed} from "vue";
+
+export default function validateMixin() {
+    /***
+     * validate input
+     * @param value
+     * @return {string|boolean}
+     */
+    const validateInput = (value) => {
+        if (!value) {
+            return 'This field is required';
         }
-    },
-    computed: {
-        /***
-         * check password confirm
-         * @return {boolean}
-         */
-        passwordMatchError() {
-            return this.info.password !== this.info.password_confirmation;
-        }
-    },
+        return true
+    }
+
+    /***
+     * check password confirmation
+     * @type {ComputedRef<boolean>}
+     */
+    const passwordMatchError = computed(() => {
+        return info.password.value !== info.password_confirmation.value;
+    })
+
+    return {
+        validateInput,
+        passwordMatchError
+    }
 }

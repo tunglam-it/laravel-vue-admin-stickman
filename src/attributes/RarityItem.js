@@ -17,4 +17,4 @@ const rarity = [
     },
 ];
 
-export default rarity;
+export default rarity

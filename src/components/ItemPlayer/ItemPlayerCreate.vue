@@ -18,7 +18,7 @@
                     <label class="form-label">Item</label>
                     <VueMultiselect
                         v-model="info.itemRawId"
-                        :options="this.itemOptions"
+                        :options="itemOptions"
                         :custom-label="nameWithTypeAndRarity"
                         placeholder="Select one"
                         label="name"
@@ -54,111 +54,97 @@
   <AppFooter/>
 </template>
 
-<script>
+<script setup>
 import AppFooter from "../AppFooter.vue";
 import AppHeader from "../AppHeader.vue";
 import AppSidebar from "../AppSidebar.vue";
-import validateMixin from "../../mixins/validateMixin.js";
 import getAttributeName from "../../mixins/getAttributeName.js";
 import axiosClient from "../../axiosClient.js";
 import {Field, Form, ErrorMessage} from 'vee-validate';
 import VueMultiselect from 'vue-multiselect'
+import {computed, onBeforeMount, reactive, ref} from "vue";
 
-
-export default {
-  components: {AppSidebar, AppHeader, AppFooter, Field, Form, ErrorMessage, VueMultiselect},
-  mixins: [validateMixin, getAttributeName],
-  name: "ItemPlayerCreate",
-  data(){
-    return{
-      itemOptions:[],
-      playerOptions:[],
-      info:{
-        itemRawId:null,
-        userId:null
-      }
-    }
-  },
-  computed: {
-    /***
-     * check validate of multiselect plugin
-     * @return {boolean}
-     */
-    isInvalid () {
-      return !this.info.itemRawId || !this.info.userId ;
-    }
-  },
-  created() {
-    this.getAllItems()
-    this.getAllUser()
-  },
-  methods:{
-    /***
-     * get all items
-     */
-    getAllItems(){
-      axiosClient.get('/player/get-all-item-info')
-        .then(({data})=>{
-          for (let i = 0; i < data.data.length; i++) {
-            let item = {
-              id: data.data[i].id,
-              name: data.data[i].name,
-              rarity: this.getRarityName(data.data[i].rarity),
-              type: this.getTypeName(data.data[i].type)
-            }
-            this.itemOptions.push(item)
-          }
-        })
-    },
-    /***
-     * multiselect items
-     * @param name
-     * @param type
-     * @param rarity
-     * @return {string}
-     */
-    nameWithTypeAndRarity({ name, type, rarity }) {
-      return `Name: ${name} - Type: ${type} - Rarity: ${rarity}`
-    },
-
-    /***
-     * get all users except admin
-     */
-    getAllUser(){
-      axiosClient.get('/admin/get-all-users')
+const emit = defineEmits(['giveItemForUser'])
+const itemOptions = ref([])
+const playerOptions = ref([])
+const info = reactive({
+  itemRawId: '',
+  userId: ''
+})
+const { getTypeName, getRarityName} = getAttributeName()
+const isInvalid = computed(()=>{
+  return !info.itemRawId || !info.userId ;
+})
+onBeforeMount(()=>{
+  getAllItems()
+  getAllUser()
+})
+/***
+ * get all items
+ */
+const getAllItems=()=>{
+  axiosClient.get('/player/get-all-item-info1')
       .then(({data})=>{
-        for (let i = 0; i < data.data.length; i++) {
-          let player = {
-            id: data.data[i].id,
-            name: data.data[i].username,
-            level: data.data[i].level
+        for (let i = 0; i < data.length; i++) {
+          let item = {
+            id: data[i].id,
+            name: data[i].name,
+            rarity: getRarityName(data[i].rarity),
+            type: getTypeName(data[i].type)
           }
-          this.playerOptions.push(player)
+          itemOptions.value.push(item)
+        }
+      })
+}
+
+/***
+ * multiselect items
+ * @param name
+ * @param type
+ * @param rarity
+ * @return {string}
+ */
+const nameWithTypeAndRarity=({ name, type, rarity })=> {
+  return `Name: ${name} - Type: ${type} - Rarity: ${rarity}`
+}
+
+/***
+ * get all users except admin
+ */
+const getAllUser=()=>{
+  axiosClient.get('/admin/get-all-users1')
+      .then(({data})=>{
+        for (let i = 0; i < data.length; i++) {
+          let player = {
+            id: data[i].id,
+            name: data[i].username,
+            level: data[i].level
+          }
+          playerOptions.value.push(player)
         }
       })
       .catch(err=>{
         console.log(err)
       })
-    },
-
-    /***
-     * multiselect players
-     * @param name
-     * @param level
-     * @return {string}
-     */
-    nameWithLevel({ name, level }) {
-      return `Username: ${name} - Level: ${level}`
-    },
-
-    /***
-     * call emit to giveItemForUser
-     */
-    giveItemForUser(){
-      this.$emit('giveItemForUser', this.info)
-    },
-  }
 }
+
+/***
+ * multiselect players
+ * @param name
+ * @param level
+ * @return {string}
+ */
+const nameWithLevel=({ name, level })=> {
+  return `Username: ${name} - Level: ${level}`
+}
+
+/***
+ * call emit to giveItemForUser
+ */
+const giveItemForUser=()=>{
+  emit('giveItemForUser', info)
+}
+
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
 

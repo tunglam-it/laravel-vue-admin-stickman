@@ -2,31 +2,27 @@
   <PlayerCreate @registerNewPlayer="registerNewPlayer"/>
 </template>
 
-<script>
+<script setup>
 import PlayerCreate from "../../../components/Player/PlayerCreate.vue";
 import axiosClient from "../../../axiosClient.js";
 import notifyPopup from "../../../mixins/notifyPopup.js";
+import {useRouter} from "vue-router";
 
-export default {
-  name: "CreatePlayer",
-  components: {PlayerCreate},
-  mixins:[notifyPopup],
-  methods: {
-    /***
-     * register a new player
-     * @param info
-     * @return mixed
-     */
-    registerNewPlayer(info) {
-      axiosClient.post('/player/register', info)
-          .then(() => {
-            this.$router.push('/')
-            this.notifyAPI('success', "Success !!!")
-          })
-          .catch(() => {
-            this.notifyAPI('error', "Failed !!!")
-          })
-    }
-  }
+const {notifyAPI} = notifyPopup()
+const router = useRouter()
+/***
+ * register a new player
+ * @param info
+ * @return mixed
+ */
+const registerNewPlayer = (info) => {
+  axiosClient.post('/player/register', info)
+      .then(() => {
+        router.push('/')
+        notifyAPI('success', "Success !!!")
+      })
+      .catch(() => {
+        notifyAPI('error', "Failed !!!")
+      })
 }
 </script>

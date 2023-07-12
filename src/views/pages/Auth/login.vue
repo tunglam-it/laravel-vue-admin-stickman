@@ -22,46 +22,38 @@
   <AppFooter />
 </template>
 
-<script>
+<script setup>
 import AuthHeader from '../../../components/Auth/AuthHeader.vue';
 import { Field, Form, ErrorMessage } from 'vee-validate';
 import axiosClient from "../../../axiosClient.js";
 import validateMixin from "../../../mixins/validateMixin.js"
 import AppFooter from "../../../components/AppFooter.vue"
+import {ref} from "vue";
+import {useRouter} from "vue-router";
+import Swal from 'sweetalert2'
 
-export default {
-  mixins: [validateMixin],
-  name: 'Login',
-  components: { Field, Form, ErrorMessage, AuthHeader, AppFooter },
-  data() {
-    return {
-      username: null,
-      password: null,
-    }
-  },
-  methods: {
-    /***
-     * login
-     */
-    handleLogin() {
-      axiosClient.post("/admin/login", {
-        username: this.username,
-        password: this.password,
+const router = useRouter()
+const {validateInput} = validateMixin()
+const username = ref('')
+const password = ref('')
+
+const handleLogin=()=> {
+  axiosClient.post("/admin/login", {
+    username: username.value,
+    password: password.value,
+  })
+      .then((response) => {
+        localStorage.setItem("token", response.data.token);
+        router.push("/");
+        window.location.reload()
       })
-        .then((response) => {
-          localStorage.setItem("token", response.data.token);
-          this.$router.push("/");
-          window.location.reload()
+      .catch((error) => {
+        Swal.fire({
+          title: 'Lỗi!',
+          text: error.response.data.error,
+          icon: 'error',
+          confirmButtonText: 'OK'
         })
-        .catch((error) => {
-          this.$swal.fire({
-            title: 'Lỗi!',
-            text: error.response.data.error,
-            icon: 'error',
-            confirmButtonText: 'OK'
-          })
-        });
-    }
-  }
+      });
 }
 </script>
